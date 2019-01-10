@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Wallet;
 
-class WalletController extends Controller
+class UserController extends Controller
 {
 
-    public function __construct(Wallet $wallet){
-        $this->wallet = $wallet;
+    public function __construct(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
@@ -19,7 +20,16 @@ class WalletController extends Controller
      */
     public function index()
     {
-        //
+        $users = $this->user->paginate(10);
+
+        return response()->json([
+            'meta' => [
+                'code' => 200,
+                'status' => 'Success',
+                'message' => 'Get list users success',
+            ],
+            'data' => $users,
+        ]);
     }
 
     /**
