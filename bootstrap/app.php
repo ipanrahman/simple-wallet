@@ -65,10 +65,8 @@ $app->middleware([
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
-]);
-
-$app->routeMiddleware([
-    'jwt.auth'=>App\Http\Middleware\JwtMiddleWare::class
+    'jwt.auth' => App\Http\Middleware\JwtMiddleWare::class,
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
 ]);
 
 /*

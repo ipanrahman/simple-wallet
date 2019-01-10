@@ -15,7 +15,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'auth'], function () use ($router) {
+$router->group(['prefix' => 'auth','middleware'=>['throttle:60,1']], function () use ($router) {
     $router->post('login', [
         'uses' => 'AuthController@authenticate',
     ]);
@@ -25,6 +25,6 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     ]);
 });
 
-$router->group(['prefix' => 'api', 'middleware' => 'jwt.auth'], function () use ($router) {
+$router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60']], function () use ($router) {
     $router->get('users', 'UserController@index');
 });
