@@ -78,9 +78,14 @@ $app->singleton(
 |
  */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+
+if ($app->environment() !== 'production') {
+    $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+    $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -98,10 +103,5 @@ $app->router->group([
 ], function ($router) {
     require __DIR__ . '/../routes/web.php';
 });
-
-if ($app->environment() !== 'production') {
-    $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
-    $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-}
 
 return $app;
