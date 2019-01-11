@@ -20,6 +20,9 @@ class CreateTransactionsTable extends Migration
             $table->enum('type',['DEBIT','CREDIT']);
             $table->string('description');
             $table->timestamps();
+
+            $table->integer('wallet_id')->unsigned();
+            $table->foreign('wallet_id')->references('id')->on('wallets')->onDelete('cascade');
         });
     }
 

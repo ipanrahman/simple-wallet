@@ -12,9 +12,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $users = User::paginate(20);
         return $this->ok('Get users success', $users);
     }
 
@@ -22,28 +22,6 @@ class UserController extends Controller
     {
         $user = $request->user();
         return $this->ok('Get profile success', $user);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -55,7 +33,15 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        $user = User::find('id');
+        if (!$user) {
+            return $this->badRequest('User id ' . $id . ' not found');
+        }
+
+        $user->fill($input);
+        $user->save();
+        return $this->save('Update user success', $user);
     }
 
     /**
@@ -66,6 +52,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find('id');
+        if (!$user) {
+            return $this->badRequest('User id ' . $id . ' not found');
+        }
+
+        $user->delete();
+        return $this->save('Update user success', $user);
     }
 }
