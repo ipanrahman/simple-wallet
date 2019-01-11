@@ -15,7 +15,8 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'auth','middleware'=>['throttle:60,1']], function () use ($router) {
+// Route auth
+$router->group(['prefix' => 'auth', 'middleware' => ['throttle:60,1']], function () use ($router) {
     $router->post('login', [
         'uses' => 'AuthController@authenticate',
     ]);
@@ -26,5 +27,13 @@ $router->group(['prefix' => 'auth','middleware'=>['throttle:60,1']], function ()
 });
 
 $router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60,1']], function () use ($router) {
-    $router->get('users', 'UserController@index');
+    // Route users
+    $router->group(['prefix' => 'users'], function ($router) {
+        $router->get('/', 'UserController@index');
+        $router->get('/profile', 'UserController@profile');
+    });
+    // Route wallets
+    $router->group(['prefix' => 'wallets'], function ($router) {
+        $router->get('/deposit', 'WalletController@deposit');
+    });
 });

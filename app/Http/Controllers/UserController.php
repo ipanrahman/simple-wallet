@@ -18,6 +18,12 @@ class UserController extends Controller
         return $this->ok('Get users success', $users);
     }
 
+    public function profile(Request $request)
+    {
+        $user = $request->auth;
+        return $this->ok('Get profile success',$user);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

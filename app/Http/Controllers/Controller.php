@@ -12,10 +12,22 @@ class Controller extends BaseController
             'meta' => [
                 'code' => 200,
                 'status' => 'Success',
-                'message' => $message
+                'message' => $message,
             ],
             'results' => $data,
         ], 200);
+    }
+
+    protected function created($message, $data)
+    {
+        return response()->json([
+            'meta' => [
+                'code' => 201,
+                'status' => 'Created',
+                'message' => $message,
+            ],
+            'results' => $data,
+        ], 201);
     }
 
     protected function notFound($message, $data = null)
@@ -24,7 +36,7 @@ class Controller extends BaseController
             'meta' => [
                 'code' => 404,
                 'status' => 'Not Found',
-                'message' => $message
+                'message' => $message,
             ],
             'results' => $data,
         ], 404);
@@ -35,7 +47,7 @@ class Controller extends BaseController
             'meta' => [
                 'code' => 400,
                 'status' => 'Bad Request',
-                'message' => $message
+                'message' => $message,
             ],
             'results' => $data,
         ], 400);
