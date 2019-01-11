@@ -20,8 +20,8 @@ class UserController extends Controller
 
     public function profile(Request $request)
     {
-        $user = $request->auth;
-        return $this->ok('Get profile success',$user);
+        $user = $request->user();
+        return $this->ok('Get profile success', $user);
     }
 
     /**

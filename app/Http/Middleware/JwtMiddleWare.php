@@ -28,7 +28,11 @@ class JwtMiddleWare
         try {
             $credential = JWT::decode($access_token, env('JWT_SECRET'), ['HS256']);
             $user = User::find($credential->sub);
-            $request->auth = $user;
+            // set credentials
+            $request->merge(['user' => $user]);
+            $request->setUserResolver(function() use($user){
+                return $user;
+            });
             return $next($request);
         } catch (ExpiredException $e) {
             return response()->json([
