@@ -45,14 +45,7 @@ class AuthController extends Controller
         $user->balance = 0;
         $user->status = 'ACTIVE';
         $user->save();
-        return response()->json([
-            'meta' => [
-                'code' => 200,
-                'status' => 'Success',
-                'message' => 'Register success',
-            ],
-            'data' => $user,
-        ], 200);
+        return $this->ok('Register success',$user);
     }
 
     public function authenticate()
