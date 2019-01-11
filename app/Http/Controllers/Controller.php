@@ -10,7 +10,7 @@ class Controller extends BaseController
     {
         return response()->json([
             'code' => 200,
-            'status' => 'success',
+            'status' => 'Success',
             'message' => $message,
             'results' => $data,
         ], 200);
@@ -20,7 +20,7 @@ class Controller extends BaseController
     {
         return response()->json([
             'code' => 404,
-            'status' => 'success',
+            'status' => 'Not Found',
             'message' => $message,
             'results' => $data,
         ], 404);
@@ -29,7 +29,7 @@ class Controller extends BaseController
     {
         return response()->json([
             'code' => 400,
-            'status' => 'success',
+            'status' => 'Bad Request',
             'message' => $message,
             'results' => $data,
         ], 400);

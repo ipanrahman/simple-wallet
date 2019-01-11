@@ -68,12 +68,10 @@ class AuthController extends Controller
             ]);
         }
         if (Hash::check($this->request->input('password'), $user->password)) {
-            return response()->json([
-                'access_token' => $this->jwt($user),
-            ], 200);
+            return $this->ok('Login success', [
+                'access_token'=> $this->jwt($user)
+            ]);
         }
-        return response()->json([
-            'error' => 'Email or password is wrong.',
-        ], 400);
+        return $this->badRequest('Email or password is wrong.');
     }
 }
