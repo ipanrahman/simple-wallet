@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -20,16 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->user->paginate(10);
-
-        return response()->json([
-            'meta' => [
-                'code' => 200,
-                'status' => 'Success',
-                'message' => 'Get list users success',
-            ],
-            'data' => $users,
-        ]);
+        $users = User::paginate(10);
+        return $this->ok('Get users success', $users);
     }
 
     /**
