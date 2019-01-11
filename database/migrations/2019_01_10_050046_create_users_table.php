@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name',100);
             $table->string('email',254)->unique();
-            $table->string('phone_number',15)->unique();
+            $table->string('phone_number',15)->nullable();
             $table->string('password',128);
-            $table->decimal('balance',13,2);
-            $table->enum('status',['ACTIVE','NON_ACTIVE']);
+            $table->decimal('balance',13,2)->default(0);
+            $table->enum('status',['ACTIVE','NON_ACTIVE'])->default('ACTIVE');
             $table->softDeletes();
             $table->timestamps();
         });
