@@ -22,7 +22,12 @@ class JwtMiddleWare
         $access_token = $request->bearerToken();
         if (!$access_token) {
             return response()->json([
-                'error' => 'Access token not provided.',
+                'meta' => [
+                    'code' => 400,
+                    'status' => 'Unauthorized',
+                    'message' => 'Access token not provided.',
+                ],
+                'results' => null,
             ], 401);
         }
         try {
@@ -30,18 +35,28 @@ class JwtMiddleWare
             $user = User::find($credential->sub);
             // set credentials
             $request->merge(['user' => $user]);
-            $request->setUserResolver(function() use($user){
+            $request->setUserResolver(function () use ($user) {
                 return $user;
             });
             return $next($request);
         } catch (ExpiredException $e) {
             return response()->json([
-                'error' => 'An error while decoding access_token.',
+                'meta' => [
+                    'code' => 400,
+                    'status' => 'Bad Request',
+                    'message' => 'access_token expired.',
+                ],
+                'results' => null,
             ], 400);
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'An error while decoding token.',
-            ], 400);
+                'meta' => [
+                    'code' => 500,
+                    'status' => 'Internal Server Error',
+                    'message' => 'An error while decoding access_token.',
+                ],
+                'results' => null,
+            ], 500);
         }
     }
 }
