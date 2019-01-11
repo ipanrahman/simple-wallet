@@ -9,9 +9,11 @@ class Controller extends BaseController
     protected function ok($message, $data)
     {
         return response()->json([
-            'code' => 200,
-            'status' => 'Success',
-            'message' => $message,
+            'meta' => [
+                'code' => 200,
+                'status' => 'Success',
+                'message' => $message
+            ],
             'results' => $data,
         ], 200);
     }
@@ -19,18 +21,22 @@ class Controller extends BaseController
     protected function notFound($message, $data = null)
     {
         return response()->json([
-            'code' => 404,
-            'status' => 'Not Found',
-            'message' => $message,
+            'meta' => [
+                'code' => 404,
+                'status' => 'Not Found',
+                'message' => $message
+            ],
             'results' => $data,
         ], 404);
     }
     protected function badRequest($message, $data = null)
     {
         return response()->json([
-            'code' => 400,
-            'status' => 'Bad Request',
-            'message' => $message,
+            'meta' => [
+                'code' => 400,
+                'status' => 'Bad Request',
+                'message' => $message
+            ],
             'results' => $data,
         ], 400);
     }
