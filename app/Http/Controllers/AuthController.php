@@ -19,7 +19,7 @@ class AuthController extends Controller
     protected function jwt(User $user)
     {
         $payload = [
-            'iss' => 'oauth2',
+            'iss' => env('APP_URL'),
             'sub' => $user->id,
             'iat' => time(),
             'exp' => time() + 60 * 60,
@@ -32,8 +32,8 @@ class AuthController extends Controller
     {
         $this->validate($this->request, [
             'name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
+            'email' => 'required|email|unique:users',
+            'phone_number' => 'required|unique:users|min:11|max:15|regex:/(08)[0-9]{9}/',
             'password' => 'required',
         ]);
         $input = $this->request->all();
@@ -45,7 +45,7 @@ class AuthController extends Controller
         $user->balance = 0;
         $user->status = 'ACTIVE';
         $user->save();
-        return $this->ok('Register success',$user);
+        return $this->ok('Register success', $user);
     }
 
     public function authenticate()
@@ -62,7 +62,7 @@ class AuthController extends Controller
         }
         if (Hash::check($this->request->input('password'), $user->password)) {
             return $this->ok('Login success', [
-                'access_token'=> $this->jwt($user)
+                'access_token' => $this->jwt($user),
             ]);
         }
         return $this->badRequest('Email or password is wrong.');
