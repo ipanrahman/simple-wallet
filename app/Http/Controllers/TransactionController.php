@@ -80,7 +80,7 @@ class TransactionController extends Controller
         if (!$transaction) {
             return $this->badRequest('Transaction id ' . $id . ' not found');
         }
-        return $this->ok($transaction);
+        return $this->ok('Get transaction by id success', $transaction);
     }
 
     /**

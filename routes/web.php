@@ -41,7 +41,8 @@ $router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60,1']
     $router->group(['prefix' => 'transactions'], function ($router) {
         $router->get('/', 'TransactionController@index');
         $router->post('/', 'TransactionController@store');
+        $router->get('/{id}','TransactionController@show');
         $router->put('/{id}', 'TransactionController@update');
-        $router->delete('/{id}', 'TransactionController@delete');
+        $router->delete('/{id}', 'TransactionController@destroy');
     });
 });

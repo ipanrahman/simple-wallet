@@ -6,7 +6,7 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    protected function ok($message, $data)
+    protected function ok($message, $data = null)
     {
         return response()->json([
             'meta' => [
