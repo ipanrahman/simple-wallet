@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Wallet;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 class AuthController extends Controller
 {
@@ -37,15 +39,30 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         $input = $this->request->all();
-        $user = new User();
-        $user->name = $input['name'];
-        $user->email = $input['email'];
-        $user->phone_number = $input['phone_number'];
-        $user->password = Hash::make($input['password']);
-        $user->balance = 0;
-        $user->status = 'ACTIVE';
-        $user->save();
-        return $this->ok('Register success', $user);
+        try {
+            DB::beginTransaction();
+            $user = new User();
+            $user->name = $input['name'];
+            $user->email = $input['email'];
+            $user->phone_number = $input['phone_number'];
+            $user->password = Hash::make($input['password']);
+            $user->balance = 0;
+            $user->status = 'ACTIVE';
+            $user->save();
+            // init wallet
+            $wallet = new Wallet();
+            $wallet->beginning_balance = 0;
+            $wallet->ending_balance = 0;
+            $wallet->debit = 0;
+            $wallet->credit = 0;
+            $wallet->user_id = $user->id;
+            $wallet->save();
+            DB::commit();
+            return $this->ok('Register success', $user);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $this->internalServerError('Error');
+        }
     }
 
     public function authenticate()

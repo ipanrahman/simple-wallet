@@ -41,6 +41,7 @@ class Controller extends BaseController
             'results' => $data,
         ], 404);
     }
+
     protected function badRequest($message, $data = null)
     {
         return response()->json([
@@ -51,5 +52,17 @@ class Controller extends BaseController
             ],
             'results' => $data,
         ], 400);
+    }
+
+    protected function internalServerError($message, $data = null)
+    {
+        return response()->json([
+            'meta' => [
+                'code' => 500,
+                'status' => 'Bad Request',
+                'message' => $message,
+            ],
+            'results' => $data,
+        ], 500);
     }
 }
