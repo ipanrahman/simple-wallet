@@ -46,3 +46,5 @@ $router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60,1']
         $router->delete('/{id}', 'TransactionController@destroy');
     });
 });
+
+$router->get('api/about', 'AboutController@index');
