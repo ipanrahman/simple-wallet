@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTransactionsTable extends Migration
 {
@@ -16,8 +16,8 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->decimal('amount',13,2);
-            $table->enum('type',['DEBIT','CREDIT']);
+            $table->decimal('amount', 13, 2);
+            $table->enum('type', ['DEBIT', 'CREDIT']);
             $table->string('description');
             $table->timestamps();
 
@@ -26,6 +26,7 @@ class CreateTransactionsTable extends Migration
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 
