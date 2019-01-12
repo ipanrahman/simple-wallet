@@ -2,22 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Wallet;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 
 class WalletController extends Controller
 {
-
     public function index(Request $request)
     {
-        $wallet = $request->user()->wallet();
-        return $this->ok('Get wallet success.', $wallet);
-    }
-
-    public function deposit(Request $request)
-    {
-        $user = $request->auth;
-        return $this->ok('test', $user);
+        $user = $request->user();
+        $wallet = Wallet::where('user_id', $user->id)->first();
+        return $this->ok('Get Wallet success', $wallet);
     }
 }

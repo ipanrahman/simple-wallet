@@ -34,14 +34,14 @@ $router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60,1']
     });
     // Route wallets
     $router->group(['prefix' => 'wallets'], function ($router) {
-        $router->get('/deposit', 'WalletController@deposit');
+        $router->get('/', 'WalletController@index');
     });
 
     // Route transactions
     $router->group(['prefix' => 'transactions'], function ($router) {
         $router->get('/', 'TransactionController@index');
         $router->post('/', 'TransactionController@store');
-        $router->get('/{id}','TransactionController@show');
+        $router->get('/{id}', 'TransactionController@show');
         $router->put('/{id}', 'TransactionController@update');
         $router->delete('/{id}', 'TransactionController@destroy');
     });
