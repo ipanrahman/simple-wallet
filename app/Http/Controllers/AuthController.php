@@ -63,7 +63,7 @@ class AuthController extends Controller
             return $this->ok('Register success', $user);
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->internalServerError('Error');
+            return $this->internalServerError($e->getMessage());
         }
     }
 
@@ -75,9 +75,7 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $this->request->input('email'))->first();
         if (!$user) {
-            return response()->json([
-                'error' => 'Email does not exist.',
-            ]);
+            return $this->badRequest('Email does not exist.');
         }
         if (Hash::check($this->request->input('password'), $user->password)) {
             return $this->ok('Login success', [

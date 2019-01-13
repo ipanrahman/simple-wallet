@@ -64,7 +64,7 @@ class TransactionController extends Controller
             return $this->created('Create transaction success', $transaction);
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->internalServerError('Error create transaction');
+            return $this->internalServerError($e->getMessage());
         }
     }
 
