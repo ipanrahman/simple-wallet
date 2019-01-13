@@ -54,6 +54,18 @@ class Controller extends BaseController
         ], 400);
     }
 
+    protected function unauthorized($message = 'Access Denied')
+    {
+        return response()->json([
+            'meta' => [
+                'code' => 401,
+                'status' => 'Access Denied',
+                'message' => $message,
+            ],
+            'results' => null,
+        ], 401);
+    }
+
     protected function internalServerError($message, $data = null)
     {
         return response()->json([

@@ -21,7 +21,11 @@ class UserController extends Controller
     public function profile(Request $request)
     {
         $user = $request->user();
-        return $this->ok('Get profile success', $user);
+        if($user->can('SHOW_USER_PROFILE')){
+            return $this->ok('Get profile success', $user);
+        }else{
+            return $this->unauthorized();
+        }
     }
 
     /**
