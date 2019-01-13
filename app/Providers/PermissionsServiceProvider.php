@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Permission;
+use App\Models\Permission;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Support\Facades\Gate;
 class PermissionsServiceProvider extends ServiceProvider
 {
     /**

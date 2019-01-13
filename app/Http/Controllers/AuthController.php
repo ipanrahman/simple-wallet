@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Wallet;
+use Carbon\Carbon;
+use DB;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use DB;
 
 class AuthController extends Controller
 {
@@ -49,19 +51,20 @@ class AuthController extends Controller
             $user->balance = 0;
             $user->status = 'ACTIVE';
             $user->save();
+            $user->roles()->attach(Role::where('slug', 'ROLE_USER')->first());
             // init wallet
-            $wallet = new Wallet();
-            $wallet->beginning_balance = 0;
-            $wallet->ending_balance = 0;
-            $wallet->debit = 0;
-            $wallet->credit = 0;
-            $wallet->user_id = $user->id;
-            $wallet->save();
+            $wallet = new Wallet([
+                'beginning_balance' => 0,
+                'ending_balance' => 0,
+                'debit' => 0,
+                'credit' => 0,
+            ]);
+            $user->wallet()->save($wallet);
             DB::commit();
             return $this->ok('Register success', $user);
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->internalServerError('Error');
+            return $this->internalServerError($e->getMessage());
         }
     }
 
@@ -73,9 +76,7 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $this->request->input('email'))->first();
         if (!$user) {
-            return response()->json([
-                'error' => 'Email does not exist.',
-            ]);
+            return $this->badRequest('Email does not exist.');
         }
         if (Hash::check($this->request->input('password'), $user->password)) {
             return $this->ok('Login success', [

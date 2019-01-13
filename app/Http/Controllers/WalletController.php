@@ -7,10 +7,22 @@ use Illuminate\Http\Request;
 
 class WalletController extends Controller
 {
+
+    private $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();
-        $wallet = Wallet::where('user_id', $user->id)->first();
-        return $this->ok('Get Wallet success', $wallet);
+        if ($user->can('SHOW_USER')) {
+            $wallet = Wallet::where('user_id', $user->id)->first();
+            return $this->ok('Get Wallet success', $wallet);
+        } else {
+            return $this->unauthorized();
+        }
     }
 }

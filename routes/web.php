@@ -26,7 +26,7 @@ $router->group(['prefix' => 'auth', 'middleware' => ['throttle:60,1']], function
     ]);
 });
 
-$router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60,1']], function () use ($router) {
+$router->group(['prefix' => 'api', 'middleware' => ['jwt.auth', 'throttle:60,1', 'role:ROLE_USER']], function () use ($router) {
     // Route users
     $router->group(['prefix' => 'users'], function ($router) {
         $router->get('/', 'UserController@index');
