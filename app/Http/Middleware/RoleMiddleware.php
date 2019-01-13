@@ -13,13 +13,27 @@ class RoleMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role, $permission = null)
     {
         if (!$request->user()->hasRole($role)) {
-            abort(404);
+            return response()->json([
+                'meta' => [
+                    'code' => 401,
+                    'status' => 'Access Denied',
+                    'message' => "Access Denied",
+                ],
+                'results' => null,
+            ], 401);
         }
         if ($permission !== null && !$request->user()->can($permission)) {
-            abort(404);
+            return response()->json([
+                'meta' => [
+                    'code' => 401,
+                    'status' => 'Access Denied',
+                    'message' => "Access Denied",
+                ],
+                'results' => null,
+            ], 401);
         }
         return $next($request);
     }
