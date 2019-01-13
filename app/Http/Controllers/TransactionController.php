@@ -56,11 +56,9 @@ class TransactionController extends Controller
                 $transaction->amount = $input['amount'];
                 $wallet = Wallet::where('user_id', $user->id)->first();
                 if ($input['type'] == 'DEBIT') {
-                    $wallet->ending_balance = $wallet->ending_balance + $transaction->amount;
-                    $wallet->debit = $wallet->debit + $transaction->amount;
+                    $wallet->debit($transaction);
                 } else if ($input['type'] == 'CREDIT') {
-                    $wallet->ending_balance = $wallet->ending_balance - $transaction->amount;
-                    $wallet->credit = $wallet->credit + $transaction->amount;
+                    $wallet->credit($transaction);
                 } else {
                     return $this->badRequest('Transaction not available', $input);
                 }
@@ -130,11 +128,9 @@ class TransactionController extends Controller
                 $transaction->amount = $input['amount'];
                 $wallet = Wallet::where('user_id', $user->id)->first();
                 if ($input['type'] == 'DEBIT') {
-                    $wallet->ending_balance = $wallet->ending_balance + $transaction->amount;
-                    $wallet->debit = $wallet->debit + $transaction->amount;
+                    $wallet->debit($transaction);
                 } else if ($input['type'] == 'CREDIT') {
-                    $wallet->ending_balance = $wallet->ending_balance - $transaction->amount;
-                    $wallet->credit = $wallet->credit + $transaction->amount;
+                    $wallet->credit($transaction);
                 } else {
                     return $this->badRequest('Transaction not available', $input);
                 }

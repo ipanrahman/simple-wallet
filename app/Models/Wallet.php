@@ -37,4 +37,18 @@ class Wallet extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function deposit($transaction)
+    {
+        $this->ending_balance = $this->ending_balance + $transaction->amount;
+        $this->debit = $this->debit + $transaction->amount;
+        return $this;
+    }
+
+    public function credit($transaction)
+    {
+        $this->ending_balance = $this->ending_balance - $transaction->amount;
+        $this->credit = $this->credit + $transaction->amount;
+        return $this;
+    }
 }
