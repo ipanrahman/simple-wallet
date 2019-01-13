@@ -25,8 +25,15 @@ class TransactionController extends Controller
     {
         $user = $this->request->user();
         if ($user->can('SHOW_TRANSACTION')) {
-            $transactions = Transaction::paginate(10);
-            return $this->ok('Get all transaction success', $transactions);
+            $start_date = $this->request->input('start_date');
+            $end_date = $this->request->input('end_date');
+            if (empty($start_date) && empty($end_date)) {
+                $transactions = Transaction::paginate(10);
+                return $this->ok('Get all transaction success', $transactions);
+            } else {
+                $transactions = Transaction::where('user_id', $user->id)->whereBetween('transaction_date', [$start_date, $end_date])->get();
+                return $this->ok('Get all transaction success', $transactions);
+            }
         }
     }
 
@@ -54,13 +61,12 @@ class TransactionController extends Controller
                 $transaction = new Transaction();
                 $transaction->name = $input['name'];
                 $transaction->amount = $input['amount'];
+                $transaction->transaction_date = $request->has('transaction_date') ? $input['transaction_date'] : date('Y-m-d');
                 $wallet = Wallet::where('user_id', $user->id)->first();
                 if ($input['type'] == 'DEBIT') {
-                    $wallet->ending_balance = $wallet->ending_balance + $transaction->amount;
-                    $wallet->debit = $wallet->debit + $transaction->amount;
+                    $wallet->debit($transaction);
                 } else if ($input['type'] == 'CREDIT') {
-                    $wallet->ending_balance = $wallet->ending_balance - $transaction->amount;
-                    $wallet->credit = $wallet->credit + $transaction->amount;
+                    $wallet->credit($transaction);
                 } else {
                     return $this->badRequest('Transaction not available', $input);
                 }
@@ -130,11 +136,9 @@ class TransactionController extends Controller
                 $transaction->amount = $input['amount'];
                 $wallet = Wallet::where('user_id', $user->id)->first();
                 if ($input['type'] == 'DEBIT') {
-                    $wallet->ending_balance = $wallet->ending_balance + $transaction->amount;
-                    $wallet->debit = $wallet->debit + $transaction->amount;
+                    $wallet->debit($transaction);
                 } else if ($input['type'] == 'CREDIT') {
-                    $wallet->ending_balance = $wallet->ending_balance - $transaction->amount;
-                    $wallet->credit = $wallet->credit + $transaction->amount;
+                    $wallet->credit($transaction);
                 } else {
                     return $this->badRequest('Transaction not available', $input);
                 }
