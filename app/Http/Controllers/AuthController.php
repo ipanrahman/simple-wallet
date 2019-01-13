@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Wallet;
+use DB;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use DB;
+use App\Models\Role;
 
 class AuthController extends Controller
 {
@@ -23,8 +24,8 @@ class AuthController extends Controller
         $payload = [
             'iss' => env('APP_URL'),
             'sub' => $user->id,
-            'iat' => time(),
-            'exp' => time() + 60 * 60,
+            'iat' => Carbon::now(),
+            'exp' => Carbon::now() + 60 * 60,
         ];
 
         return JWT::encode($payload, env('JWT_SECRET'));
@@ -49,6 +50,7 @@ class AuthController extends Controller
             $user->balance = 0;
             $user->status = 'ACTIVE';
             $user->save();
+            $user->roles()->attach(Role::where('slug', 'ROLE_USER')->first());
             // init wallet
             $wallet = new Wallet();
             $wallet->beginning_balance = 0;
