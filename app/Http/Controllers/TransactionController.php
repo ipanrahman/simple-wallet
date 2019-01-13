@@ -25,8 +25,26 @@ class TransactionController extends Controller
     {
         $user = $this->request->user();
         if ($user->can('SHOW_TRANSACTION')) {
+            $start_date = $this->request->input('start_date');
+            $end_date = $this->request->input('end_date');
             $transactions = Transaction::paginate(10);
             return $this->ok('Get all transaction success', $transactions);
+        }
+    }
+
+    /**
+     * Display a report the transactions.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function report()
+    {
+        $user = $this->request->user();
+        if ($user->can('SHOW_TRANSACTION')) {
+            $start_date = date($this->request->input('start_date'));
+            $end_date = date($this->request->input('end_date'));
+            $transactions = Transaction::where('user_id', $user->id)->whereBetween('transaction_date', [$start_date, $end_date])->get();
+            return $this->ok('Get report transaction success', $transactions);
         }
     }
 
@@ -54,6 +72,7 @@ class TransactionController extends Controller
                 $transaction = new Transaction();
                 $transaction->name = $input['name'];
                 $transaction->amount = $input['amount'];
+                $transaction->transaction_date = $request->has('transaction_date') ? $input['transaction_date'] : date('Y-m-d');
                 $wallet = Wallet::where('user_id', $user->id)->first();
                 if ($input['type'] == 'DEBIT') {
                     $wallet->debit($transaction);

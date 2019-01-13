@@ -19,6 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->decimal('amount', 13, 2);
             $table->enum('type', ['DEBIT', 'CREDIT']);
             $table->string('description');
+            $table->date('transaction_date');
             $table->timestamps();
 
             $table->integer('wallet_id')->unsigned();
