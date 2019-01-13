@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Wallet;
 use DB;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Role;
 
 class AuthController extends Controller
 {
@@ -52,13 +52,13 @@ class AuthController extends Controller
             $user->save();
             $user->roles()->attach(Role::where('slug', 'ROLE_USER')->first());
             // init wallet
-            $wallet = new Wallet();
-            $wallet->beginning_balance = 0;
-            $wallet->ending_balance = 0;
-            $wallet->debit = 0;
-            $wallet->credit = 0;
-            $wallet->user_id = $user->id;
-            $wallet->save();
+            $wallet = new Wallet([
+                'beginning_balance' => 0,
+                'ending_balance' => 0,
+                'debit' => 0,
+                'credit' => 0
+            ]);
+            $user->wallet()->save($wallet);
             DB::commit();
             return $this->ok('Register success', $user);
         } catch (Exception $e) {

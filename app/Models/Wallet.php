@@ -10,6 +10,18 @@ class Wallet extends Model
     use SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'beginning_balance',
+        'ending_balance',
+        'debit',
+        'credit',
+    ];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -18,7 +30,7 @@ class Wallet extends Model
 
     public function user()
     {
-        return $this->hashOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function transactions()
